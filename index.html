@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalkulator Nilai Mahasiswa by BayuPH</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #ffffff;
+        color: #333;
+    }
+
+    h2 {
+        text-align: center;
+        color: #4CAF50;
+    }
+
+    form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    input[type="number"] {
+        width: 100%;
+        padding: 8px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    .result {
+        margin-top: 20px;
+        padding: 15px;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 4px;
+    }
+
+    .pass {
+        color: #4CAF50; /* hijau untuk lulus */
+        border: 1px solid #4CAF50;
+        background-color: #e8f5e9;
+    }
+
+    .fail {
+        color: #f44336; /* merah untuk gagal */
+        border: 1px solid #f44336;
+        background-color: #ffebee;
+    }
+</style>
+</head>
+<body>
+
+<h2>Kalkulator Nilai Mahasiswa</h2>
+
+<form id="gradeCalculator">
+    <label for="assignment">Nilai Tugas (30%):</label>
+    <input type="number" id="assignment" min="0" max="100" required>
+
+    <label for="midterm">Nilai UTS (30%):</label>
+    <input type="number" id="midterm" min="0" max="100" required>
+
+    <label for="finalExam">Nilai UAS (40%):</label>
+    <input type="number" id="finalExam" min="0" max="100" required>
+
+    <button type="button" onclick="calculateGrade()">Hitung Nilai</button>
+</form>
+
+<div id="result" class="result"></div>
+
+<script>
+function calculateGrade() {
+    // Mendefinisikan bobot dan batas kelulusan
+    const WEIGHT_ASSIGNMENT = 0.3;
+    const WEIGHT_MIDTERM = 0.3;
+    const WEIGHT_FINAL_EXAM = 0.4;
+    const PASSING_GRADE = 60;
+
+    // Mendapatkan input nilai
+    // parseFloat digunakan untuk mengonversi string (teks) menjadi angka desimal 
+    let assignment = parseFloat(document.getElementById("assignment").value);
+    let midterm = parseFloat(document.getElementById("midterm").value);
+    let finalExam = parseFloat(document.getElementById("finalExam").value);
+
+    // Validasi input
+    // isNaN adalah fungsi yang digunakan untuk memeriksa apakah suatu nilai merupakan NaN atau bukan. NaN adalah singkatan 
+    // dari Not-a-Number, memastikan bahwa hasil konversi tersebut benar-benar angka sebelum digunakan lebih lanjut.
+    if (isNaN(assignment) || assignment < 0 || assignment > 100 ||
+        isNaN(midterm) || midterm < 0 || midterm > 100 ||
+        isNaN(finalExam) || finalExam < 0 || finalExam > 100) {
+        alert("Mohon masukkan nilai antara 0 dan 100 untuk setiap komponen.");
+        return;
+    }
+
+    // Menghitung rata-rata tertimbang
+    let weightedAverage = (assignment * WEIGHT_ASSIGNMENT) +
+                          (midterm * WEIGHT_MIDTERM) +
+                          (finalExam * WEIGHT_FINAL_EXAM);
+
+    // Menentukan nilai huruf
+    let grade;
+    if (weightedAverage >= 90) grade = "A";
+    else if (weightedAverage >= 80) grade = "B";
+    else if (weightedAverage >= 70) grade = "C";
+    else if (weightedAverage >= 60) grade = "D";
+    else grade = "E";
+
+    // Menentukan status lulus/gagal
+    let status = (weightedAverage >= PASSING_GRADE) ? "Lulus, Selamat Anda Sudah Berhasil" : "Gagal, Tetaplah Mencoba Lagi";
+    let statusClass = (weightedAverage >= PASSING_GRADE) ? "pass" : "fail";
+
+    // Menampilkan hasil
+    document.getElementById("result").innerHTML = `
+        <p>Nilai Tugas (30%): ${assignment * WEIGHT_ASSIGNMENT}</p>
+        <p>Nilai UTS (30%): ${midterm * WEIGHT_MIDTERM}</p>
+        <p>Nilai UAS (40%): ${finalExam * WEIGHT_FINAL_EXAM}</p>
+        <p>Rata-rata Tertimbang Akhir: ${weightedAverage.toFixed(2)}</p>
+        <p>Nilai Huruf: ${grade}</p>
+        <p class="${statusClass}">Status: ${status}</p>
+    `;
+}
+</script>
+
+</body>
+</html>
